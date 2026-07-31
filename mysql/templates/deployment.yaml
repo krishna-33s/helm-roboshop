@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql
+  namespace: roboshop
+  # this labels is for replicaset
+  labels:
+    project: roboshop
+    tier: database
+    component: mysql
+    environment: dev
+  annotations:
+    kubernetes.io/change-cause: {{ .Values.deployment.cause }}  
+spec:
+  replicas: {{ .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      # these labels is for replicaset to select the pods
+      project: roboshop
+      tier: database
+      component: mysql
+      environment: dev
+  template:
+    metadata:
+    # these for pod defination
+      labels:
+        project: roboshop
+        tier: database
+        component: mysql
+        environment: dev
+    spec:
+      containers:
+      - name: mysql
+        image: "{{ .Values.deployment.image }}:{{ .Values.deployment.imageVersion }}"
+        imagePullPolicy: Always
+        readinessProbe:
+          tcpSocket:
+            port: 3306
+          failureThreshold: 4
+          periodSeconds: 10 
