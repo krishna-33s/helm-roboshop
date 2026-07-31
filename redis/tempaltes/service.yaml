@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: roboshop
+  labels:
+    project: roboshop
+    tier: database
+    component: redis
+    environment: dev
+spec:
+  selector:
+      project: roboshop
+      tier: database
+      component: redis
+      environment: dev
+
+  ports:
+  - protocol: TCP
+    port: 6379
+    targetPort: 6379
+
